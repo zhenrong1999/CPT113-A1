@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cctype>
 #include <string>
+#include <sstream>
 using namespace std;
 
 class profile
@@ -71,7 +72,7 @@ class profile
 
 bool checkfordigit(const string X);
 bool emailcheck(const string X);
-
+void readline(string line,profile student[],int i);
 int main()
 {
     ifstream readf("file1.txt");
@@ -79,29 +80,13 @@ int main()
         cout<<"Fail to read file";
     else
         {
-                string Name,a,gender,address,email,nophone;
-                int nomatric,i=0;
+                string line;
+                int i=0;
                 profile student[100];
                 while(!readf.eof())
                 {
-                readf >>Name>>a;
-                while(!checkfordigit(a))    //read text until numbers.
-                {
-                    Name.insert(Name.length()," "+a);
-                    readf>>a;
-                }
-                nomatric=stoi(a);
-                readf>>gender>>address>>email;
-                while(!emailcheck(email))
-                {
-                    address.insert(address.length()," "+email);
-                    readf>>email;
-                }
-                readf>>nophone;
-                cout<<Name<<" " <<nomatric<<" " <<gender<<" "<<address<<" "<<email<< " "<<nophone;
-                student[i].change(Name,nomatric,gender,address, email,nophone);
-                cout<<endl;
-                cout<<student[i].getname()<<" "<<student[i].getmatric()<<" "<<student[i].getgender()<<" "<<student[i].getaddress()<<" "<<student[i].getemail()<<" "<<student[i].getnophone();
+                getline(readf,line);
+                readline(line,student,i);
                 i++;
             }
                 cout<<" sucess..."<<endl;
@@ -141,6 +126,32 @@ int main()
                 }
         }
 }
+
+void readline(string line,profile student[],int i)
+{
+    stringstream readl;
+    readl.str(line);
+    string Name,a,gender,address,email,nophone;
+    int nomatric;
+    readl>>Name>>a;
+    while(!checkfordigit(a))    //read text until numbers.
+    {
+        Name.insert(Name.length()," "+a);
+        readl>>a;
+    }
+    nomatric=stoi(a);
+    readl>>gender>>address>>email;
+    while(!emailcheck(email))
+    {
+        address.insert(address.length()," "+email);
+        readl>>email;
+    }
+        readl>>nophone;
+        cout<<Name<<" " <<nomatric<<" " <<gender<<" "<<address<<" "<<email<< " "<<nophone<<endl;
+        student[i].change(Name,nomatric,gender,address, email,nophone);
+        cout<<student[i].getname()<<" "<<student[i].getmatric()<<" "<<student[i].getgender()<<" "<<student[i].getaddress()<<" "<<student[i].getemail()<<" "<<student[i].getnophone();
+}
+
 
 bool checkfordigit(const string X)
 {
