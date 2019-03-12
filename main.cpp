@@ -82,7 +82,7 @@ int main()
     while(cond)
     {
     system("cls");
-    cout<<"Input data by"<<endl<<"1. Key in\n2. Files\n3. Cond."<<endl;
+    cout<<"Input data by"<<endl<<"1. Key in\n2. Files\n3. Continue"<<endl;
     cin>>j;
     if(j==1) //key in for the student info manually
     {
