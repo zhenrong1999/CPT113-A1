@@ -22,7 +22,7 @@ class academicStatus {
 		string getStatus();
 		int getAccumulatedcredit();
 		int getMuetband();
-		void setData(string,string,string,string,string,string);
+		void setData(string,string,string,string,string);
 		void displayData();
 		academicStatus();
 		~academicStatus();
@@ -57,7 +57,7 @@ academicStatus :: academicStatus(){
 
 }
 
-void academicStatus :: setData(string studentGpa,string studentCgpa,string studentStatus,string studentAccumulatedcredit,string studentMuetband,string studentMatricnumber){
+void academicStatus :: setData(string studentGpa,string studentCgpa,string studentStatus,string studentAccumulatedcredit,string studentMuetband){
 		gpa=stod(studentGpa);
 		cgpa=stod(studentCgpa);
 		status=studentStatus;
@@ -213,25 +213,64 @@ bool emailcheck(const string X)
     return false;
 }
 
-void keyIn_by_SY(profile unfilterList[],int &i){
+void keyIn_by_SY(profile unfilterList[],int &studentCount,profile student[]){
 
     string studentGpa;
 	string studentCgpa;
 	string studentStatus;
 	string studentAccumulatedcredit;
 	string studentMuetband;
-	string studentMatricnumber;
-	bool checking=true;
 	string choice5;
+    string Name,a,gender,address,email,nophone;
+    string nomatric;
+    bool checking=true;
 
-	do{
-	cout<<"Key in student matric number."<<endl;
-	cin>>studentMatricnumber;
 
-	if(studentMatricnumber.find_first_not_of("1234567890")!=string::npos || studentMatricnumber.length()!=6){
+
+
+do{
+
+    cout<<"Name of the student: "<<endl;
+    cin.clear();cin.ignore();
+    getline(cin,Name);
+    cout<<"No. matric of the student: "<<endl;
+    cin>>nomatric;
+
+    if(nomatric.find_first_not_of("1234567890")!=string::npos || nomatric.length()!=6){
 
 		cout<<"Please key in only integer and proper data. The student's data is not recorded in here."<<endl<<endl<<endl;
 		continue;}
+
+    cout<<"Gender of the student(male/female): "<<endl;
+    cin>>gender;
+
+    if(gender!="male" && gender != "female"){
+
+    	cout<<"Please key in only male or female. The student's data is not recorded in here."<<endl<<endl<<endl;
+		continue;}
+
+
+    cout<<"Address of the student: "<<endl;
+    cin.clear();cin.ignore();
+    getline(cin,address);
+
+    cout<<"Email of the student: "<<endl;
+    cin>>email;
+
+    if(emailcheck(email)==false){
+   		cout<<"Please key in only peoper data. The student's data is not recorded in here."<<endl<<endl<<endl;
+		continue;}
+
+
+    cout<<"Phone number of the student: "<<endl;
+    cin>>nophone;
+
+    if(checkfordigit(nophone)==false){
+
+   		cout<<"Please key in only peoper data. The student's data is not recorded in here."<<endl<<endl<<endl;
+		continue;}
+
+    student[studentCount].change(Name,nomatric,gender,address, email,nophone);
 
 	cout<<"Key in student's gpa."<<endl;
 	cin>>studentGpa;
@@ -273,35 +312,46 @@ void keyIn_by_SY(profile unfilterList[],int &i){
 		cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
 		continue;}
 
-	unfilterList[i].setData(studentGpa,studentCgpa,studentStatus,studentAccumulatedcredit,studentMuetband,studentMatricnumber);
+	unfilterList[studentCount].setData(studentGpa,studentCgpa,studentStatus,studentAccumulatedcredit,studentMuetband);
 
-	cout<<"Do you wish to continue key in another student's data?"<<endl<<endl;
+
+
+    cout<<"Do you wish to continue key in another student's data?"<<endl<<endl;
 	cout<<"1. Yes"<<endl;
 	cout<<"2. No"<<endl<<endl<<endl<<endl;
 
 	cout<<"*Maximum 100 students' data only";
 	cin>>choice5;
-	system("cls");
-	i++;
 
-	if(choice5=="2"){
+	if(choice5=="1"){
+		checking=true;
+	}
+
+	else if(choice5=="2"){
 
 		checking=false;
 	}
+	studentCount++;
+	}while(checking==true && studentCount<100);
 
-}while(checking==true && i<10);
+	for(int j=0;j<studentCount;j++){
 
-	for(int j=0;j<i;j++){
 
+		cout<<"Name : "<<student[j].getname()<<endl;
+		cout<<"Matric number : "<<student[j].getmatric()<<endl;
+		cout<<"Gender : "<<student[j].getgender()<<endl;
+		cout<<"Address : "<<student[j].getaddress()<<endl;
+		cout<<"Email : "<<student[j].getemail()<<endl;
+		cout<<"Handphone number : "<<student[j].getnophone()<<endl;
 		unfilterList[j].displayData();
 	}
 
 	cout<<endl<<"Above is the data you had just key in."<<endl<<endl;
-
+system("pause");
 }
 
 
-void readfile1(profile student[],int &i)
+void readfile1(profile student[],int &studentCount)
 {
         ifstream readf("file1.txt"); //read file function
         stringstream readl; //let the string like cout and cin
@@ -332,9 +382,9 @@ void readfile1(profile student[],int &i)
                     }
                     readl>>nophone;
                     cout<<Name<<" " <<nomatric<<" " <<gender<<" "<<address<<" "<<email<< " "<<nophone<<endl;
-                    student[i].change(Name,a,gender,address, email,nophone);
-                    cout<<student[i].getname()<<" "<<student[i].getmatric()<<" "<<student[i].getgender()<<" "<<student[i].getaddress()<<" "<<student[i].getemail()<<" "<<student[i].getnophone();
-                    i++;
+                    student[studentCount].change(Name,a,gender,address, email,nophone);
+                    cout<<student[studentCount].getname()<<" "<<student[studentCount].getmatric()<<" "<<student[studentCount].getgender()<<" "<<student[studentCount].getaddress()<<" "<<student[studentCount].getemail()<<" "<<student[studentCount].getnophone();
+                    studentCount++;
                 }
                 cout<<" sucess..."<<endl; //read finished
         }
@@ -381,7 +431,7 @@ void readfile2(profile unfilterList[])
 		continue;
 	}
 
-	unfilterList[i].setData(studentGpa,studentCgpa,studentStatus,studentAccumulatedcredit,studentMuetband,studentMatricnumber);
+	unfilterList[i].setData(studentGpa,studentCgpa,studentStatus,studentAccumulatedcredit,studentMuetband);
 	unfilterList[i].displayData();
 
 }
@@ -626,52 +676,41 @@ void filtering_by_SY(profile unfilterList[]){
 }
 
 
-
 int main()
 {
-    int j;int i=0;
+    int j;int studentCount=0;
     profile student[100];
-    bool cond=true;
-    while(cond)
+
+    profile unfilterList[100];
+
+    while(true)
     {
     system("cls");
     cout<<"Input data by"<<endl<<"1. Key in\n2. Files\n3. Continue"<<endl;
     cin>>j;
     if(j==1) //key in for the student info manually
-    {
-    string Name,a,gender,address,email,nophone;
-    string nomatric;
-    system("cls");
-    cout<<"Name of the student: "<<endl;
-    cin.clear();cin.ignore();
-    getline(cin,Name);
-    cout<<"No. matric of the student: "<<endl;
-    cin>>nomatric;
-    cout<<"Gender of the student(male/female): "<<endl;
-    cin>>gender;
-    cout<<"Address of the student: "<<endl;
-    cin.clear();cin.ignore();
-    getline(cin,address);
-    cout<<"Email of the student: "<<endl;
-    cin>>email;
-    cout<<"Phone number of the student: "<<endl;
-    cin>>nophone;
-    cout<<Name<<" " <<nomatric<<" " <<gender<<" "<<address<<" "<<email<< " "<<nophone<<endl;
-    student[i].change(Name,nomatric,gender,address, email,nophone);
-    cout<<student[i].getname()<<" "<<student[i].getmatric()<<" "<<student[i].getgender()<<" "<<student[i].getaddress()<<" "<<student[i].getemail()<<" "<<student[i].getnophone(); // put into the class as a member
-    i++;
-    }
+        {
+            keyIn_by_SY(unfilterList,studentCount,student);
+        }
+  //  cout<<student[i].getname()<<" "<<student[i].getmatric()<<" "<<student[i].getgender()<<" "<<student[i].getaddress()<<" "<<student[i].getemail()<<" "<<student[i].getnophone(); // put into the class as a member
+
+
+
     else if(j==2)
     {
-        readfile(student,i); //size of object class.???
+        readfile1(student,studentCount); //size of object class.???
         readfile2(student);
         readfile3(student);
     }
-    else if(j==3)   // exit the loop for the menu
-        cond=false;
-}
+    else if(j==3)  { // exit the loop for the menu
         system("cls");
-        while(true)
-        filter_by_zr(i,student);
+        filter_by_zr(studentCount,student);
+}
+
+    else
+        {
+        continue;
+        }
+    }
 }
 
