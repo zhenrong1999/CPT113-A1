@@ -97,7 +97,7 @@ class courselist
 private:
 string *course,*grade,*cu;//cu is course unit.
 int size_of_list=0;
-public:									//function AGtoG(change name), function calculate GPA.
+public:                                                                 //function calculate GPA.
 courselist(){
 }
 courselist(string Coursein[],int CUin[],string Gradein[],int size)
@@ -127,6 +127,61 @@ void course_set(string Coursein[],string CUin[],string Gradein[],int size)
 		cu[i]=CUin[i];
 	}
 
+}
+
+float convertTonumber(string gradeOfcourse)//convert Alphabet to numeric //copy to courselist //add start here
+{
+	if (gradeOfcourse=="A"||gradeOfcourse=="a")
+		return 4.00;
+	else if(gradeOfcourse=="A-"||gradeOfcourse=="a-")
+		return 3.67;
+	else if (gradeOfcourse=="B+"||gradeOfcourse=="b+")
+		return 3.33;
+	else if (gradeOfcourse=="B"||gradeOfcourse=="b")
+		return 3.00;
+	else if(gradeOfcourse=="B-"||gradeOfcourse=="b-")
+		return 2.67;
+	else if(gradeOfcourse=="C+"||gradeOfcourse=="c+")
+		return 2.33;
+	else if(gradeOfcourse=="C"||gradeOfcourse=="c")
+		return 2.00;
+	else if (gradeOfcourse=="C-"||gradeOfcourse=="c-")
+		return 1.67;
+	else if(gradeOfcourse=="D+"||gradeOfcourse=="d+")
+		return 1.33;
+	else if (gradeOfcourse=="D"||gradeOfcourse=="d")
+		return 1.00;
+	else if (gradeOfcourse=="D-"||gradeOfcourse=="d-")
+		return 0.67;
+	else if(gradeOfcourse=="F"||gradeOfcourse=="f")
+		return 0.00;
+	else if(gradeOfcourse=="TL"||gradeOfcourse=="tl")
+		return -2;
+	else
+		return -1;
+}
+
+double calculateGpa(){ //add start here
+
+	int unit=0;
+	double gpa=0;
+	double processingGpa;
+
+	for(int i=0; i<size_of_list; i++) {
+
+		if(course[i]=="CPT111"||course[i]=="cpt111"||course[i]=="CST131"||course[i]=="cst131"||course[i]=="CPT113"||course[i]=="cpt113"||course[i]=="CMT221"||course[i]=="cmt221"||course[i]=="CMT222"||course[i]=="cmt222"||course[i]=="CAT200"||course[i]=="cat200") {
+			processingGpa=convertTonumber(grade[i])*stoi(cu[i]);
+			unit+=stoi(cu[i]);
+			gpa+= processingGpa;
+
+		}
+
+
+	}
+
+	gpa=gpa/unit;
+
+	return gpa;
 }
 
 int getsizeoflist()
@@ -201,6 +256,15 @@ void changeNomatric(string Nomatric) //function that change only no. matric
 	nomatric=Nomatric;
 }
 
+float callconvertTonumber(string validatingGrade){ //from main function call the function convertTonumber() from courselist
+	return Coursetable.convertTonumber(validatingGrade);
+}
+
+double callcalculateGpa(){ //from main function call the function calculateGpa() from courselist
+
+	return Coursetable.calculateGpa();
+}
+
 string getname()
 {
 	return name;
@@ -259,7 +323,7 @@ int binarysearch(int begin,int end, type arr[],type search) //binary search is a
 	do
 	{
 		//cout<<begin<<" "<<end<<endl;
-		half=floor((end-begin)/2)+begin;
+		half=floor((end-begin)/2);
 		if(arr[half]==search)
 		{
 			finding=true;
@@ -284,6 +348,92 @@ int binarysearch(int begin,int end, type arr[],type search) //binary search is a
 
 //user defined function
 
+string stringintoupper(string input)
+{
+	stringstream input_as_stream;
+	input_as_stream.str(input);
+	char temp;
+	string templower;
+	string output="";
+	int size_input=input.length();
+	for (int i=0; i<size_input; i++)
+	{
+		input_as_stream>>temp;
+		templower=toupper(temp);
+		output.insert(output.length(),templower);
+	}
+	return output;
+}
+
+bool validation(profile student[],int index_number)
+{
+	if(student[index_number].getCgpa()>=2)
+		if(student[index_number].getAccumulatedcredit()>=60)
+			if(stringintoupper(student[index_number].getStatus())=="ACTIVE")
+				if(student[index_number].getMuetband()>=4)
+					if(student[index_number].callcalculateGpa()>=2)
+					{
+						int no_of_required_course=0;
+						for(int i=0; i<student[index_number].getsizeoflist(); i++)
+						{
+
+							if(stringintoupper(student[index_number].getcourse(i))=="CPT111")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))>=2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+							else if(stringintoupper(student[index_number].getcourse(i))=="CPT113")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))>=2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+							else if(stringintoupper(student[index_number].getcourse(i))=="CST131")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))>=2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+							else if(stringintoupper(student[index_number].getcourse(i))=="CMT221")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))>=2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+							else if(stringintoupper(student[index_number].getcourse(i))=="CMT222")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))>=2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+							else if(stringintoupper(student[index_number].getcourse(i))=="CAT200")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))>=2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+							else if(stringintoupper(student[index_number].getcourse(i))=="CAT300")
+							{
+								if(student[index_number].callconvertTonumber(student[index_number].getgrade(i))==-2)
+								{no_of_required_course++;}
+								else
+								{return false;}
+							}
+						}
+						if(no_of_required_course==7)
+						{return true;}
+					}
+
+	return false;
+}
+
 bool checkfordigit(const string X)
 {
 	char str[X.length()];
@@ -305,36 +455,6 @@ bool emailcheck(const string X)
 			return true;
 	}
 	return false;
-}
-
-float AGtoG(string AG)//convert Alphabet to numeric //copy to courselist
-{
-	if (AG=="A")
-		return 4.00;
-	else if(AG=="A-")
-		return 3.67;
-	else if (AG=="B+")
-		return 3.33;
-	else if (AG=="B")
-		return 3.00;
-	else if(AG=="B-")
-		return 2.67;
-	else if(AG=="C+")
-		return 2.33;
-	else if(AG=="C")
-		return 2.00;
-	else if (AG=="C-")
-		return 1.67;
-	else if(AG=="D+")
-		return 1.33;
-	else if (AG=="D")
-		return 1.00;
-	else if (AG=="D-")
-		return 0.67;
-	else if(AG=="F")
-		return 0.00;
-	else
-		return -1;
 }
 
 void get_array_of_no_matric(string arr[],int studentCount,profile student[])
@@ -369,10 +489,10 @@ void display_student_data(profile student[],int i)
 	cout<<left<<setw(3)<<"10. "<<setw(20)<<"Accumulated Credit: "<<student[i].getAccumulatedcredit()<<endl;
 	cout<<left<<setw(3)<<"11. "<<setw(20)<<"Muet band: "<<student[i].getMuetband()<<endl;
 	cout<<left<<setw(3)<<"12. "<<"Course list"<<endl;
-	cout<<internal<<"|"<<setw(6)<<"No."<<"|"<<setw(7)<<"Course"<<"|"<<setw(12)<<"Course Unit"<<"|"<<setw(6)<<"Grade"<<"|"<<endl;
+	cout<<internal<<"|"<<setw(4)<<"No."<<"|"<<setw(7)<<"Course"<<"|"<<setw(12)<<"Course Unit"<<"|"<<setw(6)<<"Grade"<<"|"<<endl;
 	for(int j=0; j<student[i].getsizeoflist(); j++)
 	{
-		cout<<internal<<"|"<<setw(6)<<j+1<<". "<<"|"<<setw(7)<<student[i].getcourse(j)<<"|"<<setw(12)<<student[i].getcourseunit(j)<<"|"<<setw(6)<<student[i].getgrade(j)<<"|"<<endl;
+		cout<<internal<<"|"<<setw(2)<<j+1<<". "<<"|"<<setw(7)<<student[i].getcourse(j)<<"|"<<setw(12)<<student[i].getcourseunit(j)<<"|"<<setw(6)<<student[i].getgrade(j)<<"|"<<endl;
 	}
 }
 
@@ -539,7 +659,7 @@ void keyIn_by_SY(int &studentCount,profile student[])
 			cu[i]=to_string(input);
 			cout<<i+1<<". Grade: ";
 			cin>>grade[i];
-			while(AGtoG(grade[i])==-1)
+			while(student[i].callconvertTonumber(grade[i])==-1)
 			{
 				cout<<"Please try again with valid grade.\n";
 				cout<<i+1<<". Grade: ";
@@ -578,7 +698,6 @@ void update_data(const int studentCount,profile student[])
 	string studentStatus;
 	string studentAccumulatedcredit;
 	string studentMuetband;
-	char choice;
 	string Name,gender,address,email,nophone;
 	string nomatric;
 	string nomatricarry[studentCount];
@@ -612,231 +731,403 @@ void update_data(const int studentCount,profile student[])
 	//loop for the update the data of the student
 	int no_menu;
 	bool updating=true;
-do{
-	system("pause");
-	system("cls");
-	display_student_data(student,index_number);
-	cout<<endl;
-	cout<<"To change the student data key in the number in front of each line. For updating courses, please key in 12."<<endl;
-	cout<<"Attention! Number matric of student cannot be changed."<<endl;
-	cin>>no_menu;
+	do {
+		system("pause");
+		system("cls");
+		display_student_data(student,index_number);
+		cout<<endl;
+		cout<<"To change the student data key in the number in front of each line. For updating courses, please key in 12."<<endl;
+		cout<<"Key in -1 to back to home."<<endl;
+		cout<<"Attention! Number matric of student cannot be changed."<<endl;
+		cin>>no_menu;
 
- 	switch(no_menu)
-	{
+		switch(no_menu)
+		{
 		case -1:
-		updating=false;
-		break;
+			updating=false;
+			break;
 		case 1:
-		cout<<"Name of the student: "<<endl; //tell user to type in the name of the student
-		cin.clear(); cin.ignore();
-		getline(cin,Name); //get the name for the student
-		if(nomatric.find_first_not_of("1234567890")!=string::npos || nomatric.length()!=6) {
+			cout<<"Name of the student: "<<endl; //tell user to type in the name of the student
+			cin.clear(); cin.ignore();
+			getline(cin,Name); //get the name for the student
+			if(nomatric.find_first_not_of("1234567890")!=string::npos || nomatric.length()!=6) {
 
-			cout<<"Please key in only integer and proper data. The student's data is not recorded in here."<<endl<<endl<<endl;//display error message to the user to key in only integer
-			continue;
-		}
-		student[index_number].change(Name,student[index_number].getmatric(),student[index_number].getgender(),student[index_number].getaddress(), student[index_number].getemail(),student[index_number].getnophone());
-		break;
+				cout<<"Please key in only integer and proper data. The student's data is not recorded in here."<<endl<<endl<<endl;//display error message to the user to key in only integer
+				continue;
+			}
+			student[index_number].change(Name,student[index_number].getmatric(),student[index_number].getgender(),student[index_number].getaddress(), student[index_number].getemail(),student[index_number].getnophone());
+			break;
 
 		case 3:
-		cout<<"Gender of the student(male/female): "<<endl;
-		cin>>gender;
+			cout<<"Gender of the student(male/female): "<<endl;
+			cin>>gender;
 
-		if(gender!="male" && gender != "female") {
+			if(gender!="male" && gender != "female") {
 
-			cout<<"Please key in only male or female. The student's data is not recorded in here."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),gender,student[index_number].getaddress(), student[index_number].getemail(),student[index_number].getnophone());
-		break;
+				cout<<"Please key in only male or female. The student's data is not recorded in here."<<endl<<endl<<endl;
+				continue;
+			}
+			student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),gender,student[index_number].getaddress(), student[index_number].getemail(),student[index_number].getnophone());
+			break;
 
 		case 4:
-		cout<<"Address of the student: "<<endl;
-		cin.clear(); cin.ignore();
-		getline(cin,address);
-		student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),student[index_number].getgender(),address, student[index_number].getemail(),student[index_number].getnophone());
-		break;
+			cout<<"Address of the student: "<<endl;
+			cin.clear(); cin.ignore();
+			getline(cin,address);
+			student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),student[index_number].getgender(),address, student[index_number].getemail(),student[index_number].getnophone());
+			break;
 
 		case 5:
-		cout<<"Email of the student: "<<endl;
-		cin>>email;
+			cout<<"Email of the student: "<<endl;
+			cin>>email;
 
-		if(emailcheck(email)==false) {
+			if(emailcheck(email)==false) {
 
-			cout<<"Please key in only peoper data. The student's data is not recorded in here."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),student[index_number].getgender(),student[index_number].getaddress(),email ,student[index_number].getnophone());
-		break;
+				cout<<"Please key in only peoper data. The student's data is not recorded in here."<<endl<<endl<<endl;
+				continue;
+			}
+			student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),student[index_number].getgender(),student[index_number].getaddress(),email,student[index_number].getnophone());
+			break;
 
 		case 6:
-		cout<<"Phone number of the student: "<<endl;
-		cin>>nophone;
+			cout<<"Phone number of the student: "<<endl;
+			cin>>nophone;
 
-		if(checkfordigit(nophone)==false) {
+			if(checkfordigit(nophone)==false) {
 
-			cout<<"Please key in only peoper data. The student's data is not recorded in here."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),student[index_number].getgender(),student[index_number].getaddress(), student[index_number].getemail(),nophone);
-
-		break;
-
-case 7:
-		cout<<"Key in student's gpa."<<endl;
-		cin>>studentGpa;
-
-
-		if(studentGpa.find_first_not_of("1234567890.")!=string::npos || stod(studentGpa)>4.0) {
-
-			cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].academics_set(studentGpa,to_string(student[index_number].getCgpa()),student[index_number].getStatus(),to_string(student[index_number].getAccumulatedcredit()),to_string(student[index_number].getMuetband()));
-
-break;
-
-case 8:
-		cout<<"Key in student's cgpa."<<endl;
-		cin>>studentCgpa;
-
-
-		if(studentCgpa.find_first_not_of("1234567890.")!=string::npos || stod(studentCgpa)>4.0) {
-
-			cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].academics_set(to_string(student[index_number].getGpa()),studentCgpa,student[index_number].getStatus(),to_string(student[index_number].getAccumulatedcredit()),to_string(student[index_number].getMuetband()));
-
-break;
-
-case 9:
-		cout<<"Key in student's status."<<endl;
-		cout<<"1. Active"<<endl;
-		cout<<"2. P1"<<endl;
-		cout<<"3. P2"<<endl;
-		cout<<"4. FO"<<endl;
-		cin>>choice;
-		switch (choice)
-		{
-		case '1':      studentStatus="Active"; break;
-		case '2':      studentStatus="P1";     break;
-		case '3':      studentStatus="P2";     break;
-		case '4':      studentStatus="FO";     break;
-		default:
-			cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
-			cin.clear(); cin.ignore( numeric_limits<int>::max(),'\n'); //discard all the input from cin.
-			continue;
-		}
-		student[index_number].academics_set(to_string(student[index_number].getGpa()),to_string(student[index_number].getCgpa()),studentStatus,to_string(student[index_number].getAccumulatedcredit()),to_string(student[index_number].getMuetband()));
-
-break;
-
-case 10:
-		cout<<"Key in student's accumulated credit."<<endl;
-		cin>>studentAccumulatedcredit;
-
-
-		if(studentAccumulatedcredit.find_first_not_of("1234567890.")!=string::npos) {
-
-			cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].academics_set(to_string(student[index_number].getGpa()),to_string(student[index_number].getCgpa()),student[index_number].getStatus(),studentAccumulatedcredit,to_string(student[index_number].getMuetband()));
-
-break;
-
-case 11:
-		cout<<"Key in student's muet band."<<endl;
-		cin>>studentMuetband;
-
-
-		if(studentMuetband.find_first_not_of("1234567890")!=string::npos || stoi(studentMuetband)>6) {
-
-			cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
-			continue;
-		}
-		student[index_number].academics_set(to_string(student[index_number].getGpa()),to_string(student[index_number].getCgpa()),student[index_number].getStatus(),to_string(student[index_number].getAccumulatedcredit()),studentMuetband);
-break;
-
-case 12:
-		int no_of_course=student[index_number].getsizeoflist();
-		string *course= new string[no_of_course];
-		string *cu= new string[no_of_course];
-		string *grade= new string[no_of_course];
-		do
-		{
-		system("cls");
-		cout<<left<<setw(3)<<"1. "<<setw(20)<<"Name: "<<student[index_number].getname()<<endl;
-		cout<<left<<setw(3)<<"2. "<<setw(20)<<"No. matric: "<<student[index_number].getmatric()<<endl;
-		cout<<left<<setw(3)<<"12. "<<"Course list"<<endl;
-		cout<<internal<<"|"<<setw(4)<<"No."<<"|"<<setw(7)<<"Course"<<"|"<<setw(12)<<"Course Unit"<<"|"<<setw(6)<<"Grade"<<"|"<<endl;
-		for(int j=0; j<student[index_number].getsizeoflist(); j++)
-		{
-			cout<<internal<<"|"<<setw(4)<<j+1<<". "<<"|"<<setw(7)<<student[index_number].getcourse(j)<<"|"<<setw(12)<<student[index_number].getcourseunit(j)<<"|"<<setw(6)<<student[index_number].getgrade(j)<<"|"<<endl;
-			course[j]=student[index_number].getcourse(j);
-			cu[j]=student[index_number].getcourseunit(j);
-			grade[j]=student[index_number].getgrade(j);
-		}
-
-		cout<<"Key in the number in front of the course to be changed. (to exit key in -1)"<<endl;
-		cin>>no_menu;
-		do
-		{
-			try
-			{
-				cin>>no_menu;
+				cout<<"Please key in only peoper data. The student's data is not recorded in here."<<endl<<endl<<endl;
+				continue;
 			}
-			catch(...)
-			{
-				cout<<"Your can't an alphabet."<<endl;
-			}
-			if(no_menu<0)
-			{
-				cout<<"You can't input number less than or equal to 0"<<endl;
-			}
-		} while(no_menu<0);
+			student[index_number].change(student[index_number].getname(),student[index_number].getmatric(),student[index_number].getgender(),student[index_number].getaddress(), student[index_number].getemail(),nophone);
 
-		int input;
-		if (no_menu==-1)
-		 break;
-		int i=no_menu-1;
-			cout<<i+1<<". Course Code: ";
-			cin>>course[i];
-			while(course[i].length()!=6)
-			{
-				cout<<"Please try again.\n";
-				cout<<i+1<<". Course Code: ";
-				cin>>course[i];
-			}
-			cout<<i+1<<". Course Unit: ";
-			cin>>input;
-			while(!(input>0))
-			{
-				cout<<"Please try again with positive integer.\n";
-				cout<<i+1<<". Course Unit: ";
-				cin.clear(); cin.ignore();
-				cin>>input;
-			}
-			cu[i]=input;
-			cout<<i+1<<". Grade: ";
-			cin>>grade[i];
-			while(AGtoG(grade[i])==-1)
-			{
-				cout<<"Please try again with valid grade.\n";
-				cout<<i+1<<". Grade: ";
-				cin>>grade[i];
-			}
+			break;
 
-	}while(true);
-	student[index_number].course_change(course,cu,grade,no_of_course);
-}
+		case 7:
+			cout<<"Key in student's gpa."<<endl;
+			cin>>studentGpa;
 
 
-}while(updating);
+			if(studentGpa.find_first_not_of("1234567890.")!=string::npos || stod(studentGpa)>4.0) {
+
+				cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
+				continue;
+			}
+			student[index_number].academics_set(studentGpa,to_string(student[index_number].getCgpa()),student[index_number].getStatus(),to_string(student[index_number].getAccumulatedcredit()),to_string(student[index_number].getMuetband()));
+
+			break;
+
+		case 8:
+			cout<<"Key in student's cgpa."<<endl;
+			cin>>studentCgpa;
+
+
+			if(studentCgpa.find_first_not_of("1234567890.")!=string::npos || stod(studentCgpa)>4.0) {
+
+				cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
+				continue;
+			}
+			student[index_number].academics_set(to_string(student[index_number].getGpa()),studentCgpa,student[index_number].getStatus(),to_string(student[index_number].getAccumulatedcredit()),to_string(student[index_number].getMuetband()));
+
+			break;
+
+		case 9:
+			char choice;
+			cout<<"Key in student's status."<<endl;
+			cout<<"1. Active"<<endl;
+			cout<<"2. P1"<<endl;
+			cout<<"3. P2"<<endl;
+			cout<<"4. FO"<<endl;
+			cin>>choice;
+			switch (choice)
+			{
+			case '1':      studentStatus="Active"; break;
+			case '2':      studentStatus="P1";     break;
+			case '3':      studentStatus="P2";     break;
+			case '4':      studentStatus="FO";     break;
+			default:
+				cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
+				cin.clear(); cin.ignore( numeric_limits<int>::max(),'\n'); //discard all the input from cin.
+				continue;
+			}
+			student[index_number].academics_set(to_string(student[index_number].getGpa()),to_string(student[index_number].getCgpa()),studentStatus,to_string(student[index_number].getAccumulatedcredit()),to_string(student[index_number].getMuetband()));
+
+			break;
+
+		case 10:
+			cout<<"Key in student's accumulated credit."<<endl;
+			cin>>studentAccumulatedcredit;
+
+
+			if(studentAccumulatedcredit.find_first_not_of("1234567890.")!=string::npos) {
+
+				cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
+				continue;
+			}
+			student[index_number].academics_set(to_string(student[index_number].getGpa()),to_string(student[index_number].getCgpa()),student[index_number].getStatus(),studentAccumulatedcredit,to_string(student[index_number].getMuetband()));
+
+			break;
+
+		case 11:
+			cout<<"Key in student's muet band."<<endl;
+			cin>>studentMuetband;
+
+
+			if(studentMuetband.find_first_not_of("1234567890")!=string::npos || stoi(studentMuetband)>6) {
+
+				cout<<"Please key in only integer and proper data. Key in data again."<<endl<<endl<<endl;
+				continue;
+			}
+			student[index_number].academics_set(to_string(student[index_number].getGpa()),to_string(student[index_number].getCgpa()),student[index_number].getStatus(),to_string(student[index_number].getAccumulatedcredit()),studentMuetband);
+			break;
+
+		case 12:
+			int no_of_course=student[index_number].getsizeoflist();
+			string *course= new string[no_of_course];
+			string *cu= new string[no_of_course];
+			string *grade= new string[no_of_course];
+			int linenumber;
+			do
+			{
+				system("cls");
+				cout<<left<<setw(3)<<"1. "<<setw(20)<<"Name: "<<student[index_number].getname()<<endl;
+				cout<<left<<setw(3)<<"2. "<<setw(20)<<"No. matric: "<<student[index_number].getmatric()<<endl;
+				cout<<left<<setw(3)<<"12. "<<"Course list"<<endl;
+				cout<<internal<<"|"<<setw(4)<<"No."<<"|"<<setw(7)<<"Course"<<"|"<<setw(12)<<"Course Unit"<<"|"<<setw(6)<<"Grade"<<"|"<<endl;
+
+				for(int j=0; j<student[index_number].getsizeoflist(); j++)
+				{
+					cout<<internal<<"|"<<setw(2)<<j+1<<". "<<"|"<<setw(7)<<student[index_number].getcourse(j)<<"|"<<setw(12)<<student[index_number].getcourseunit(j)<<"|"<<setw(6)<<student[index_number].getgrade(j)<<"|"<<endl;
+					course[j]=student[index_number].getcourse(j);
+					cu[j]=student[index_number].getcourseunit(j);
+					grade[j]=student[index_number].getgrade(j);
+				}
+
+				cout<<"Key in the number in front of the line to be changed. (to exit key in -1. to add/delete new course key in 0 )"<<endl;
+				do
+				{
+					try
+					{
+						cin>>no_menu;
+					}
+					catch(...)
+					{
+						cout<<"Your can't an alphabet."<<endl;
+					}
+					if(no_menu<-1||no_menu>student[index_number].getsizeoflist())
+					{
+						cout<<"You can't input number less than -1 and more than"<<student[index_number].getsizeoflist()<<endl;
+					}
+				} while(no_menu<-1||no_menu>student[index_number].getsizeoflist());
+
+				if (no_menu==-1)
+				{break;}
+
+				if (no_menu==0)
+				{
+					cout<<"Pick one from the list\n";
+					cout<<"1. Add course.\n2. Delete course.\n3. Back\n";
+					do
+					{
+						try
+						{
+							cin>>no_menu;
+						}
+						catch(...)
+						{
+							cout<<"Your can't an alphabet."<<endl;
+						}
+						if(no_menu<0||no_menu>3)
+						{
+							cout<<"You can't input number less than 1 and more than 3"<<endl;
+						}
+					} while(no_menu<0||no_menu>3);
+
+					string *temp_course= new string[no_of_course];
+					string *temp_cu= new string[no_of_course];
+					string *temp_grade= new string[no_of_course];
+					int input;
+					for(int i=0; i<no_of_course; i++)
+					{
+						temp_course[i]  = course[i];
+						temp_cu[i]      = cu[i];
+						temp_grade[i]   = grade[i];
+					}
+
+					switch(no_menu)
+					{
+					case 1:
+						no_of_course++;
+						delete []course;
+						course = new string[no_of_course];
+						delete []cu;
+						cu = new string[no_of_course];
+						delete []grade;
+						grade = new string[no_of_course];
+
+						for(int i=0; i<(no_of_course-1); i++)
+						{
+							course[i]  =    temp_course[i];
+							cu[i]            =    temp_cu[i];
+							grade[i]         =    temp_grade[i];
+						}
+						delete []temp_course;
+						delete []temp_cu;
+						delete []temp_grade;
+
+						cout<<no_of_course<<". Course Code: ";
+						cin>>course[no_of_course-1];
+						while(course[no_of_course-1].length()!=6)
+						{
+							cout<<"Please try again.\n";
+							cout<<no_of_course<<". Course Code: ";
+							cin>>course[no_of_course-1];
+						}
+						cout<<no_of_course<<". Course Unit: ";
+						cin>>input;
+						while(!(input>0))
+						{
+							cout<<"Please try again with positive integer.\n";
+							cout<<no_of_course<<". Course Unit: ";
+							cin.clear(); cin.ignore();
+							cin>>input;
+						}
+						cu[no_of_course-1]=to_string(input);
+						cout<<no_of_course<<". Grade: ";
+						cin>>grade[no_of_course-1];
+						while(student[index_number].callconvertTonumber(grade[no_of_course-1])==-1)
+						{
+							cout<<"Please try again with valid grade.\n";
+							cout<<no_of_course<<". Grade: ";
+							cin>>grade[no_of_course-1];
+						}
+						student[index_number].course_change(course,cu,grade,no_of_course);
+						break;
+
+					case 2:
+						cout<<"Key in the number in front of the line to be deleted. (To back, key in 0.  )"<<endl;
+						do
+						{
+							try
+							{
+								cin>>no_menu;
+							}
+							catch(...)
+							{
+								cout<<"Your can't an alphabet."<<endl;
+							}
+							if(no_menu<0||no_menu>student[index_number].getsizeoflist())
+							{
+								cout<<"You can't input number less than 0 and more than"<<student[index_number].getsizeoflist()<<endl;
+							}
+						} while(no_menu<0||no_menu>student[index_number].getsizeoflist());
+						if(no_menu==0)
+						{break;}
+						else
+						{
+							delete []course;
+							course = new string[no_of_course-1];
+							delete []cu;
+							cu = new string[no_of_course-1];
+							delete []grade;
+							grade = new string[no_of_course-1];
+							bool found=false;
+							for(int i=0; i<no_of_course; i++)
+							{
+								if(found==true)
+								{
+									course[i-1]  =    temp_course[i];
+									cu[i-1]                  =    temp_cu[i];
+									grade[i-1]       =    temp_grade[i];
+								}
+								else if(i==(no_menu-1))
+								{
+									found=true;
+								}
+								else
+								{
+									course[i]  =    temp_course[i];
+									cu[i]            =    temp_cu[i];
+									grade[i]         =    temp_grade[i];
+								}
+							}
+							no_of_course--;
+							delete []temp_course;
+							delete []temp_cu;
+							delete []temp_grade;
+							student[index_number].course_change(course,cu,grade,no_of_course);
+						}
+						break;
+
+					case 3:
+						break;
+					}
+					continue;
+				}
+
+				linenumber=--no_menu;
+				cout<<internal<<"|1."<<setw(7)<<"Course"<<"|2."<<setw(12)<<"Course Unit"<<"|3."<<setw(6)<<"Grade"<<"|"<<endl;
+				cout<<internal<<"|1."<<setw(7)<<student[index_number].getcourse(linenumber)<<"|2."<<setw(12)<<student[index_number].getcourseunit(linenumber)<<"|3."<<setw(6)<<student[index_number].getgrade(linenumber)<<"|"<<endl;
+				cout<<"Key in the number of column to change.(to exit key in 0)"<<endl;
+				do
+				{
+					try
+					{
+						cin>>no_menu;
+					}
+					catch(...)
+					{
+						cout<<"Your can't an alphabet."<<endl;
+					}
+					if(no_menu<0||no_menu>3)
+					{
+						cout<<"You can't input number less than 0 and more than 3"<<endl;
+					}
+				} while(no_menu<0||no_menu>3);
+
+				switch(no_menu)
+				{
+				case 1:
+					cout<<linenumber+1<<". Course Code: ";
+					cin>>course[linenumber];
+					while(course[linenumber].length()!=6)
+					{
+						cout<<"Please try again.\n";
+						cout<<linenumber+1<<". Course Code: ";
+						cin>>course[linenumber];
+					}
+
+				case 2:
+					int input;
+					cout<<linenumber+1<<". Course Unit: ";
+					cin>>input;
+					while(!(input>0))
+					{
+						cout<<"Please try again with positive integer.\n";
+						cout<<linenumber+1<<". Course Unit: ";
+						cin.clear(); cin.ignore();
+						cin>>input;
+					}
+					cu[linenumber]=to_string(input);
+
+				case 3:
+					cout<<linenumber+1<<". Grade: ";
+					cin>>grade[linenumber];
+					while(student[index_number].callconvertTonumber(grade[linenumber])==-1)
+					{
+						cout<<"Please try again with valid grade.\n";
+						cout<<linenumber+1<<". Grade: ";
+						cin>>grade[linenumber];
+					}
+				default:
+					continue;
+				}
+				student[index_number].course_change(course,cu,grade,no_of_course);
+			} while(true);
+		}
+	} while(updating);
 
 	system("cls");
-		display_student_data(student,index_number);
+	display_student_data(student,index_number);
 
 	cout<<endl<<"Above is the data you had just key in."<<endl<<endl;
 	system("pause");
@@ -1198,10 +1489,121 @@ void filtering_by_SY(profile student[],int studentCount){
 	}
 }
 
+void generate_report(profile student[],int studentCount){
+	int no_menu_1;
+	int no_menu_2;
+	do
+	{
+		system("cls");
+		cout<<"Generate Report Menu"<<endl;
+		cout<<"Choose one of the following."<<endl;
+		cout<<"1. List of qualified student"<<endl;
+		cout<<"2. List of not qualified student"<<endl;
+		cout<<"3. Back"<<endl;
+		cin>>no_menu_1;
+		if(no_menu_1==3)
+			return;
+		if(no_menu_1==1||no_menu_1==2)
+		{
+			cout<<"Choose one of the following."<<endl;
+			cout<<"1. All Gender"<<endl;
+			cout<<"2. Male"<<endl;
+			cout<<"3. Female"<<endl;
+			cin>>no_menu_2;
+		}
+	} while(no_menu_2<1&&no_menu_2>3);
+
+	if(no_menu_1==1&&no_menu_2==1)
+//All Qualified student
+		for(int i=0; i<studentCount; i++) {
+
+			if(validation(student,i)) {
+
+				cout<<"Qualified student : "<<endl<<endl;
+				cout<<"Name                  : "<<student[i].getname()<<endl;
+				cout<<"Matric No             : "<<student[i].getmatric()<<endl;
+				cout<<"Gpa of the 6 courses  : "<<student[i].callcalculateGpa()<<endl<<endl<<endl;
+
+			}
+		}
+
+	else if(no_menu_1==2&&no_menu_2==1)
+//All Not Qualified student
+		for(int i=0; i<studentCount; i++) {
+
+			if(!validation(student,i)) {
+
+				cout<<"Not qualified student : "<<endl<<endl;
+				cout<<"Name                  : "<<student[i].getname()<<endl;
+				cout<<"Matric No             : "<<student[i].getmatric()<<endl;
+				cout<<"Gpa of the 6 courses  : "<<student[i].callcalculateGpa()<<endl<<endl<<endl;
+
+			}
+		}
+
+	else if(no_menu_1==1&&no_menu_2==2)
+//All  Qualified Male student
+		for(int i=0; i<studentCount; i++) {
+
+			if(validation(student,i) && student[i].getgender()=="male") {
+
+				cout<<"Qualified male student : "<<endl<<endl;
+				cout<<"Name                  : "<<student[i].getname()<<endl;
+				cout<<"Matric No             : "<<student[i].getmatric()<<endl;
+				cout<<"Gpa of the 6 courses  : "<<student[i].callcalculateGpa()<<endl<<endl<<endl;
+
+			}
+		}
+
+	else if(no_menu_1==2&&no_menu_2==2)
+//All Not qualified male student
+		for(int i=0; i<studentCount; i++) {
+
+			if(!validation(student,i) && student[i].getgender()=="male") {
+
+				cout<<"Not qualified male student : "<<endl<<endl;
+				cout<<"Name                  : "<<student[i].getname()<<endl;
+				cout<<"Matric No             : "<<student[i].getmatric()<<endl;
+				cout<<"Gpa of the 6 courses  : "<<student[i].callcalculateGpa()<<endl<<endl<<endl;
+
+			}
+		}
+
+	else if(no_menu_1==1&&no_menu_2==3)
+//All  Qualified Female student
+		for(int i=0; i<studentCount; i++) {
+
+			if(validation(student,i) && student[i].getgender()=="female") {
+
+				cout<<"Qualified female student : "<<endl<<endl;
+				cout<<"Name                  : "<<student[i].getname()<<endl;
+				cout<<"Matric No             : "<<student[i].getmatric()<<endl;
+				cout<<"Gpa of the 6 courses  : "<<student[i].callcalculateGpa()<<endl<<endl<<endl;
+
+			}
+		}
+
+	else if(no_menu_1==2&&no_menu_2==3)
+//All Not Qualified female student
+		for(int i=0; i<studentCount; i++) {
+
+			if(!validation(student,i) && student[i].getgender()=="female") {
+
+				cout<<"Not qualified female student : "<<endl<<endl;
+				cout<<"Name                  : "<<student[i].getname()<<endl;
+				cout<<"Matric No             : "<<student[i].getmatric()<<endl;
+				cout<<"Gpa of the 6 courses  : "<<student[i].callcalculateGpa()<<endl<<endl<<endl;
+
+			}
+		}
+
+	system("pause");
+}
+
 void filter_by_zr(int studentCount,profile student[])
 {
 	cout<<"Filter Menu\n";              //filter menu
-	cout<<"1. Display All\n2.Search by matric no.\n3.Name for first alphabet  \n4.Gender \n5. Sorting\n6. Filter GPA,CGPA,Status,Accumulated credit and MUET\n";
+	cout<<"1. Display All\n2. Search by matric no.\n3. Name for first alphabet  \n4. Gender \n5. Sorting\n6. Filter GPA,CGPA,Status,Accumulated credit and MUET\n7. Generate Report\n";
 	int j; string nomatric;
 	cin>>j;
 	switch (j)
@@ -1213,22 +1615,24 @@ void filter_by_zr(int studentCount,profile student[])
 		break;
 
 	case 2:
-		cout<<"Key in the student's matric number."<<endl;
+		cout<<"Key in the student's matric number."<<endl;//binarysearch
 		cin>>nomatric;
 
-		for(int k=0; k<studentCount; k++) {
-			if(nomatric == student[k].getmatric())
+		if(nomatric.find_first_of("1234567890")!=string::npos && nomatric.length()==6)
+		{
+			string nomatricarry[studentCount];
+			get_array_of_no_matric(nomatricarry,studentCount,student);
+			int index_number=binarysearch(0,studentCount,nomatricarry,nomatric);
+			if(index_number==-1)
 			{
-				display_student_data(student,k);
-				break;
+				cout<<"Student not found in the database."<<endl;
 			}
-			if(k==studentCount-1)
+			else
 			{
-				cout<<"Student not in database."<<endl;
-				break;
+				cout<<"Student Found"<<endl;
+				display_student_data(student,index_number);
 			}
 		}
-
 		break;
 
 	case 3:
@@ -1285,7 +1689,7 @@ void filter_by_zr(int studentCount,profile student[])
 	case 6:
 		filtering_by_SY(student,studentCount);
 		break;
-		case 7:
+	case 7:
 		generate_report(student,studentCount);
 		break;
 	}
@@ -1305,8 +1709,13 @@ int main()
 	while(true)
 	{
 		system("cls");
-		cout<<"Input data by"<<endl<<"1. Key in\n2. Files\n3. Continue\n4. Change maximum number to be processed (Current:)"<<max_student<<endl;
-		cout<<"5. Update data\n"<<"6. Exit"<<endl;
+		cout<<"Input data by"<<endl;
+		cout<<"1. Key in\n";
+		cout<<"2. Files\n";
+		cout<<"3. Update data\n";
+		cout<<"4. Continue\n";
+		cout<<"5. Change maximum number to be processed (Current:)"<<max_student<<endl;
+		cout<<"6. Exit"<<endl;
 		cin>>j;
 		if(j==1) //key in for the student info manually
 		{
@@ -1333,11 +1742,15 @@ int main()
 			}
 			system("pause");
 		}
-		else if(j==3)  {// exit the loop for the menu
+		else if(j==3)
+			update_data(studentCount,pointer);
+
+		else if(j==4)
+		{
 			system("cls");
 			filter_by_zr(studentCount,pointer);
 		}
-		else if(j==4)
+		else if(j==5)
 		{
 			cout<<"Enter the maximum student you want (Default:100)"<<endl;
 			cin>>j;
@@ -1362,16 +1775,10 @@ int main()
 				}
 				delete []temperary;
 			}
-
-
 		}
-		else if(j==5)
-			update_data(studentCount,pointer);
 		else if(j==6)
-			return 0;
+			return 0; // exit the loop for the menu
 		else
-		{
 			continue;
-		}
 	}
 }
